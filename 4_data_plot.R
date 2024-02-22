@@ -5,9 +5,7 @@
 #Contato: erlipinto@gmail.com, cardoso.mvs@gmail.com 
 
 ## Objetivo:
-# Este script realiza modelagem estatística usando o algoritmo Random Forest para prever a variável de resposta 'estoque'. 
-# Inclui etapas de preparação dos dados, treinamento do modelo com validação cruzada k-fold, avaliação de métricas de desempenho e 
-# salvamento dos resultados.
+# Este script gera os gráficos e o mapa de clusters a partir dos resultados da validação cruzada stardard e spatial.
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 require(dplyr) #Para manipulação de dados
