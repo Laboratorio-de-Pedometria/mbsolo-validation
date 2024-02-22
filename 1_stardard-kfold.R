@@ -5,7 +5,7 @@
 #Contato: erlipinto@gmail.com, cardoso.mvs@gmail.com 
 
 ## Objetivo:
-# Este script realiza modelagem estatística usando o algoritmo Random Forest para prever a variável de resposta 'estoque'. 
+# Este script realiza modelagem estatística usando o algoritmo Random Forest para predizer a variável de resposta 'estoque'. 
 # Inclui etapas de preparação dos dados, treinamento do modelo com validação cruzada k-fold, avaliação de métricas de desempenho e 
 # salvamento dos resultados.
 
