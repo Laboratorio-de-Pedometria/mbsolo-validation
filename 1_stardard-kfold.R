@@ -39,22 +39,22 @@ registerDoParallel(cl) #Esta função registra o cluster criado anteriormente, p
 ## Definindo caminhos para os diretórios de entrada e saída ----------------------------------------------------
 
 #Define o caminho para entrada dos dados
-input_data_path <- "C:/Users/marco/OneDrive/Área de Trabalho/matriz"
+input_data_path <- "D:/0_Projetos/1_mbsolos-validation/data"
 
 #Define o caminho para salvar os modelos ajustados
-output_models_path <- "C:/Users/marco/OneDrive/Área de Trabalho/tuned-models_Cbeta_v1-7-4/"
+output_models_path <- "C:/Users/marco/OneDrive/Área de Trabalho/tuned-models_C1_v2_0_0/"
 
 #Define o caminho para salvar os resultados
-output_models_results_path <- "C:/Users/marco/OneDrive/Área de Trabalho/cross-validation-results_Cbeta_v1-7-4/"
+output_models_results_path <- "C:/Users/marco/OneDrive/Área de Trabalho/cross-validation-results_C1_v2_0_0/"
 
 ## Importação e divisão de datasets. ---------------------------------------------------------------------------
 
 #Lê o arquivo CSV para a variável original_data.
 original_data <- read_csv(paste0(input_data_path,
-                                 "/matriz_soc_pred_Cbeta_v1-7-4.csv"))
+                                 "/matriz_soc_obs_C1_v2_0_0.csv"))
 
 #Armazena a versão dos dados analisados.
-data_version <- "Cbeta_v1-7-4"
+data_version <- "C1_v2_0_0"
 #Define a variável k para o número de folds na validação cruzada (ainda não definido).
 k = NA
 
@@ -89,16 +89,21 @@ covariables <- c(
   'bdod',
   'cec',
   'cfvo',
-  'clay',
+  # 'clay', #Usado na versão 1.0.0
   'nitrogen',
   'phh2o',
-  'sand',
-  'silt',
+  # 'sand', #Usado na versão 1.0.0
+  # 'silt', #Usado na versão 1.0.0
   'soc',
   
   'oxides',
   'clayminerals',
   
+  #Mapbiomas Granulometria
+  'mapbiomas_sand',
+  'mapbiomas_silt',
+  'mapbiomas_clay',
+
   # Black Soil
   'black_soil_prob',
   
@@ -134,40 +139,40 @@ covariables <- c(
   'savi_mean',
   'ndvi_mean',
   
-  # MapBiomas - Col.7.1
-  'formacaoCampestre',
-  'formacaoFlorestal',
-  'formacaoSavanica',
-  'mosaicoAgriculturaPastagem',
-  'outrasFormacoesNaoFlorestais',
-  'pastagem',
-  'lavouras',
-  'antropico',
-  'natural',
-  'Area_Estavel',
+  # # MapBiomas - Col.7.1
+  # 'formacaoCampestre',
+  # 'formacaoFlorestal',
+  # 'formacaoSavanica',
+  # 'mosaicoAgriculturaPastagem',
+  # 'outrasFormacoesNaoFlorestais',
+  # 'pastagem',
+  # 'lavouras',
+  # 'antropico',
+  # 'natural',
+  # 'Area_Estavel',
   
   # MapBiomas - Col. 8.0
   # 'campoAlagado-areaPantanosa', #Não rodou na matriz C1-v1_0_0
-  #'formacaoCampestre',
-  #'formacaoFlorestal',
-  #'formacaoSavanica',
-  #'lavouras',
-  #'mosaicoDeUsos',
-  #'outrasFormacoesFlorestais',
-  #'pastagem',
-  #'restingas',
-  #'silvicultura',
-  #'antropico',
-  #'natural',
+  'formacaoCampestre',
+  'formacaoFlorestal',
+  'formacaoSavanica',
+  'lavouras',
+  'mosaicoDeUsos',
+  'outrasFormacoesFlorestais',
+  'pastagem',
+  'restingas',
+  'silvicultura',
+  'antropico',
+  'natural',
 
-  #'Area_Estavel',
+  'Area_Estavel',
   
   # Biomas 
   'Amazonia',
   'Caatinga',
   'Cerrado',
-  'Mata_Atalntica', #Col. 7.1
-  #'Mata_Atlantica', #Col. 8.0
+  # 'Mata_Atalntica', #Col. 7.1
+  'Mata_Atlantica', #Col. 8.0
   'Pampa',
   'Pantanal',
   
@@ -195,7 +200,7 @@ covariables <- c(
 
 ## Definição das métricas usadas (script "statistical_functions.R) -----------------------------------------------------
 
-source("C:/Users/marco/OneDrive/Área de Trabalho/Scripts/statistical_functions.R") # Fonte de um script externo contendo funções estatísticas
+source("D:/0_Projetos/1_mbsolos-validation/code/0_statistical_functions.R") # Fonte de um script externo contendo funções estatísticas
 
 ## Modelagem-----
 

@@ -12,7 +12,7 @@
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # Define o número de clusters a serem considerados
-number_of_clusters <- c(10, 20, 30)
+number_of_clusters <- c(20, 30) #c(10, 20, 30)
 
 for (k in seq(along.with = number_of_clusters)) { # Loop sobre os diferentes números de clusters
   
@@ -33,17 +33,17 @@ for (k in seq(along.with = number_of_clusters)) { # Loop sobre os diferentes nú
 # Define os caminho de saída dos dados --------------------------------
  
 #Define o caminho para salvar os modelos ajustados   
-  output_models_path <- "C:/Users/CODEVASF/Desktop/tuned-models_v1-7-3/"
+  output_models_path <- "models/tuned-models_C1_v2_0_0_cvs/"
   
 #Define o caminho para salvar os resultados
-  output_models_results_path <- "C:/Users/CODEVASF/Desktop/cross-validation-results_v1-7-3/"
+  output_models_results_path <- "results/2024_03_24_cvs_C1_v2_0_0/"
   
 # Importação e divisão dos conjuntos de dados -----------------------------
   
   original_data <- read_csv( # Lê os dados originais
-    "C:/Users/CODEVASF/Desktop/2023-04-25-cross_validation-study/01-data/matriz_rf_prediction_v1-7-3.csv")
+    "data/matriz_soc_obs_C1_v2_0_0.csv")
   
-  data_version <- "v1-7-3" # Define a versão dos dados
+  data_version <- "v2-0-0" # Define a versão dos dados
   
 # Agrupamento das amostras por posição geográfica --------------------------------
   
@@ -137,15 +137,20 @@ for (k in seq(along.with = number_of_clusters)) { # Loop sobre os diferentes nú
     'bdod',
     'cec',
     'cfvo',
-    'clay',
+    #'clay', usado C1-v1_0_0
     'nitrogen',
     'phh2o',
-    'sand',
-    'silt',
+    #'sand',  usado C1-v1_0_0
+    #'silt',  usado C1-v1_0_0
     'soc',
     
     'oxides',
     'clayminerals',
+
+     #Mapbiomas Granulometria
+    'mapbiomas_sand',
+    'mapbiomas_silt',
+    'mapbiomas_clay',
     
     # Black Soil
     'black_soil_prob',
@@ -212,7 +217,8 @@ for (k in seq(along.with = number_of_clusters)) { # Loop sobre os diferentes nú
     'Amazonia',
     'Caatinga',
     'Cerrado',
-    'Mata_Atalntica',
+    # 'Mata_Atalntica', #Lulc 7.3
+    'Mata_Atlantica', #Lulc 8.0
     'Pampa',
     'Pantanal',
     
@@ -241,7 +247,7 @@ for (k in seq(along.with = number_of_clusters)) { # Loop sobre os diferentes nú
   
 # Definição das métricas usadas (script "statistical_functions.R) -----------------------------------------------------
   
-  source("./my_statistical_functions.R") # Fonte de um script externo contendo funções estatísticas
+  source("code/0_statistical_functions.R") # Fonte de um script externo contendo funções estatísticas
   
   # Modelagem ----------------------------------------------------------------
 

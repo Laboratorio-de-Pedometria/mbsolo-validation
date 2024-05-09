@@ -14,10 +14,10 @@ require(ggplot2) #Para criação de gráficos
 require(patchwork) #Para combinar gráficos
 
 #Define o caminho para o diretório com os arquivos de resultados
-data_path <- "results/"
+data_path <- "D:/0_Projetos/1_mbsolos-validation/results/"
 
 #Define o caminho para o diretório onde serão salvos os arquivos com as figuras
-output_path <- "results/figure/"
+output_path <- "D:/0_Projetos/1_mbsolos-validation/results/figure/"
 
 #Lista todos os arquivos com extensão ".xlsx" no diretório path
 list.files(path = data_path, pattern = ".xlsx")
@@ -26,8 +26,8 @@ cv_results <- list(                                                             
   # read_excel(paste0(data_path, "cross_validation-results_v1-5-0.xlsx")),           #Faz a leitura dos arquivos .xlsx
   # read_excel(paste0(data_path, "cross_validation-results_v1-6-0.xlsx")),
   # read_excel(paste0(data_path, "cross_validation-results_v1-7-2.xlsx")),
-  read_excel(paste0(data_path, "uniao_cross_validation-results_Cbeta_v1-7-4.xlsx")),     ##cross_validation-results_v1-7-3.xlsx
-  read_excel(paste0(data_path, "uniao_cross_validation-results_C1_v1_0_0.xlsx")))%>%
+  read_excel(paste0(data_path, "2023_12_12_cv_C1_v1_0_0/uniao_cross_validation-results_C1_v1_0_0.xlsx")),     
+  read_excel(paste0(data_path, "2024_03_18_cv_C1_v2_0_0/uniao_cross_validation-results_C1_v2_0_0.xlsx")))%>%
   bind_rows() %>%                                                                    #Combina os dataframes lidos da lista em um único dataframe
   mutate(cv_nclusters = ifelse(cross_validation == "Standard k-Fold CV",             #Se "cross_validation" for "Standard k-Fold CV", a coluna mantém o mesmo valor.
                                cross_validation,
@@ -130,10 +130,10 @@ cv_results <- list(                                                             
 # ggsave(filename = paste0(output_path, "mse_rmse_nse-v1-7-3.png"),
 #        width = 148, height = 220, units = "mm", dpi = 300)
 
-## ME e MAE para Cbeta_v1_7_4----------
+## ME e MAE para C1_v000----------
 
 (cv_results %>% 
-   filter(map_version == "Cbeta_v1-7-4", n_clusters %in% c(0, 30)) %>% #Filtra os dados
+   filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% #Filtra os dados
    ggplot(aes(x = model_for, y = ME))+ #Cria o ggplot e define os eixos "x" e "y" 
    geom_errorbar(stat = "boxplot", width = 0.25)+
    geom_boxplot(width = 0.5, size = 0.7)+
@@ -141,7 +141,7 @@ cv_results <- list(                                                             
    scale_y_continuous(limits = c(0, 700), breaks = seq(0, 700, 100),
                       labels = seq(0, 700, 100)/1000)+
    labs(x = NULL, y = expression(atop("ME", (kg~m^-2))),
-        title = "Simulations for the version data: Cbeta_v1_7_4 (n = 9531)")+
+        title = "Simulations for the version data: C1_v000 (n = 9531)")+
    theme_classic()+
    theme(text = element_text(family = "serif", size = 12),
          axis.text = element_text(family = "serif", size = 12),
@@ -150,7 +150,7 @@ cv_results <- list(                                                             
          axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
          axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "Cbeta_v1-7-4", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = MAE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -166,21 +166,21 @@ cv_results <- list(                                                             
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "me_and_mae-Cbeta_v1-7-4.png"),
+ggsave(filename = paste0(output_path, "me_and_mae-C1_v000.png"),
        width = 148, height = 148, units = "mm", dpi = 600)
 
-## MSE, RMSE e NSE para Cbeta_v1_7_4-----
+## MSE, RMSE e NSE para C1_v000-----
 library(scales)
 
 (cv_results %>% 
-    filter(map_version == "Cbeta_v1-7-4", n_clusters %in% c(0, 30)) %>% 
+    filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
     ggplot(aes(x = model_for, y = MSE))+
     geom_errorbar(stat = "boxplot", width = 0.25)+
     geom_boxplot(width = 0.5, size = 0.7)+
     facet_grid(.~cv_nclusters)+
     scale_y_continuous(limits = c(13000000, 25000000), labels = scientific)+
     labs(x = NULL,
-         title = "Simulations for the version data: Cbeta_v1-7-4 (n = 9531)")+
+         title = "Simulations for the version data: C1_v000 (n = 9531)")+
     theme_classic()+
     theme(text = element_text(family = "serif", size = 12),
           axis.text = element_text(family = "serif", size = 12),
@@ -189,7 +189,7 @@ library(scales)
           axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
           axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "Cbeta_v1-7-4", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = RMSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -206,7 +206,7 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "Cbeta_v1-7-4", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = NSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -222,14 +222,14 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "mse_rmse_nse-Cbeta_v1_7_4.png"),
+ggsave(filename = paste0(output_path, "mse_rmse_nse-C1_v000.png"),
        width = 148, height = 220, units = "mm", dpi = 300)
 
 
 
-## ME e MAE para C1_v1_0_0----
+## ME e MAE para C1_v001----
 (cv_results %>% 
-   filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+   filter(map_version == "C1_v001", n_clusters %in% c(0, 30)) %>% 
    ggplot(aes(x = model_for, y = ME))+
    geom_errorbar(stat = "boxplot", width = 0.25)+
    geom_boxplot(width = 0.5, size = 0.7)+
@@ -237,7 +237,7 @@ ggsave(filename = paste0(output_path, "mse_rmse_nse-Cbeta_v1_7_4.png"),
    scale_y_continuous(limits = c(0, 700), breaks = seq(0, 700, 100),
                       labels = seq(0, 700, 100)/1000)+
    labs(x = NULL, y = expression(atop("ME", (kg~m^-2))),
-        title = "Simulations for the version data: C1_v1_0_0 (n = 9531)")+
+        title = "Simulations for the version data: C1_v001 (n = 9531)")+
    theme_classic()+
    theme(text = element_text(family = "serif", size = 12),
          axis.text = element_text(family = "serif", size = 12),
@@ -246,7 +246,7 @@ ggsave(filename = paste0(output_path, "mse_rmse_nse-Cbeta_v1_7_4.png"),
          axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
          axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v001", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = MAE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -262,21 +262,21 @@ ggsave(filename = paste0(output_path, "mse_rmse_nse-Cbeta_v1_7_4.png"),
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "me_and_mae-C1_v1_0_0.png"),
+ggsave(filename = paste0(output_path, "me_and_mae-C1_v001.png"),
        width = 148, height = 148, units = "mm", dpi = 600)
 
-## MSE, RMSE e NSE para C1_v1_0_0-----
+## MSE, RMSE e NSE para C1_v001-----
 library(scales)
 
 (cv_results %>% 
-    filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+    filter(map_version == "C1_v001", n_clusters %in% c(0, 30)) %>% 
     ggplot(aes(x = model_for, y = MSE))+
     geom_errorbar(stat = "boxplot", width = 0.25)+
     geom_boxplot(width = 0.5, size = 0.7)+
     facet_grid(.~cv_nclusters)+
     scale_y_continuous(limits = c(13000000, 25000000), labels = scientific)+
     labs(x = NULL,
-         title = "Simulations for the version data: C1_v1_0_0 (n = 9531)")+
+         title = "Simulations for the version data: C1_v001 (n = 9531)")+
     theme_classic()+
     theme(text = element_text(family = "serif", size = 12),
           axis.text = element_text(family = "serif", size = 12),
@@ -285,7 +285,7 @@ library(scales)
           axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
           axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v001", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = RMSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -302,7 +302,7 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v001", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = model_for, y = NSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -318,7 +318,7 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "mse_rmse_nse-C1_v1_0_0.png"),
+ggsave(filename = paste0(output_path, "mse_rmse_nse-C1_v001.png"),
        width = 148, height = 220, units = "mm", dpi = 300)
 
 
@@ -327,19 +327,19 @@ ggsave(filename = paste0(output_path, "mse_rmse_nse-C1_v1_0_0.png"),
 list.files(path = data_path, pattern = ".xlsx")
 
 territories_cv_results <- list(
-  read_excel(paste0(data_path, "each_biome-cross_validation-results_C1_v1_0_0.xlsx"))) %>% 
+  read_excel(paste0("D:/0_Projetos/1_mbsolos-validation/results/2023_12_12_cv_C1_v1_0_0/each_biome-cross_validation-results_C1_v1_0_0.xlsx"))) %>% 
   bind_rows()
 
-## ME e MAE para C1_v1_0_0
+## ME e MAE para C1_v000
 (territories_cv_results %>% 
-    filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+    filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
     ggplot(aes(x = biome, y = ME))+
     geom_errorbar(stat = "boxplot", width = 0.25)+
     geom_boxplot(width = 0.5, size = 0.7)+
     scale_y_continuous(limits = c(-200, 800), breaks = seq(-200, 800, 200),
                        labels = seq(-200, 800, 200)/1000)+
     labs(x = NULL, y = expression(atop("ME", (kg~m^-2))),
-         title = "Simulations for the version data: C1_v1_0_0 (n = 9531)")+
+         title = "Simulations for the version data: C1_v000 (n = 9531)")+
     theme_classic()+
     theme(text = element_text(family = "serif", size = 12),
           axis.text = element_text(family = "serif", size = 12),
@@ -347,7 +347,7 @@ territories_cv_results <- list(
           axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
           axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (territories_cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = biome, y = MAE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -361,20 +361,20 @@ territories_cv_results <- list(
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "biomes-me_and_mae-C1_v1_0_0.png"),
+ggsave(filename = paste0(output_path, "biomes-me_and_mae-C1_v000.png"),
        width = 220, height = 148, units = "mm", dpi = 600)
 
-## MSE, RMSE e NSE para C1_v1_0_0
+## MSE, RMSE e NSE para C1_v000
 library(scales)
 
 (territories_cv_results %>% 
-    filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+    filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
     ggplot(aes(x = biome, y = MSE))+
     geom_errorbar(stat = "boxplot", width = 0.25)+
     geom_boxplot(width = 0.5, size = 0.7)+
     scale_y_continuous(limits = c(4000000, 60000000), labels = scientific)+
     labs(x = NULL,
-         title = "Simulations for the version data: C1_v1_0_0 (n = 9531)")+
+         title = "Simulations for the version data: C1_v000 (n = 9531)")+
     theme_classic()+
     theme(text = element_text(family = "serif", size = 12),
           axis.text = element_text(family = "serif", size = 12),
@@ -382,7 +382,7 @@ library(scales)
           axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
           axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (territories_cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = biome, y = RMSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -397,7 +397,7 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))/
   (territories_cv_results %>% 
-     filter(map_version == "C1_v1_0_0", n_clusters %in% c(0, 30)) %>% 
+     filter(map_version == "C1_v000", n_clusters %in% c(0, 30)) %>% 
      ggplot(aes(x = biome, y = NSE))+
      geom_errorbar(stat = "boxplot", width = 0.25)+
      geom_boxplot(width = 0.5, size = 0.7)+
@@ -411,7 +411,7 @@ library(scales)
            axis.title = element_text(family = "serif", size = 12, colour = "#000000"),
            axis.title.y = element_text(angle = 0, hjust = 1, vjust = 0.5)))
 
-ggsave(filename = paste0(output_path, "biomes-mse_rmse_nse-C1_v1_0_0.png"),
+ggsave(filename = paste0(output_path, "biomes-mse_rmse_nse-C1_v000.png"),
        width = 220, height = 220, units = "mm", dpi = 300)
 
 # # Viewing clusters --------------------------------------------------------

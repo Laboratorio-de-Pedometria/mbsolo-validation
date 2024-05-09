@@ -24,7 +24,7 @@ library(magrittr)    # Para operações pipe (%>%)
 
 # Data --------------------------------------------------------------------
 # Definindo a versão dos dados em uso
-data_version <- "C1_v2_0_0"
+data_version <- "C1_v001-year"
 
 # Criando o caminho para os resultados de validação cruzada
 cv_results_path <- "/results/2024_03_18_cv_C1_v2_0_0/"
@@ -37,7 +37,7 @@ list.files(path = cv_results_path, pattern = ".xlsx")
 cv_results <- list(
   # Resultados da validação cruzada k-Fold comum
   rf__kFold_results = read_excel(
-    paste0(cv_results_path, "D:/0_Projetos/1_mbsolos-validation/results/2024_03_18_cv_C1_v2_0_0/rf-kFold-results.xlsx")) %>% 
+    paste0(cv_results_path, "/rf-kFold-results.xlsx")) %>% 
     mutate(cross_validation = "Standard k-Fold CV", model_for = "random forest", n_clusters = 0),
   
  #  # Resultados da validação cruzada Spatial com diferentes números de clusters
@@ -59,7 +59,7 @@ cv_results <- list(
 cv_results <- bind_rows(cv_results)
 
 # Escrevendo os resultados em um arquivo Excel
-write_xlsx(cv_results, "results/cv_C1_v001_results.xlsx", col_names = TRUE)
+write_xlsx(cv_results, "results/cv_C1_v001_results_year.xlsx", col_names = TRUE)
 
 # Biome-wise standard cross-validation statistics -------------------------
 
@@ -70,7 +70,7 @@ data_version <- "C1_v2_0_0"
 
 # Classificando os dados por bioma
 original_data <- original_data %>% mutate(
-  biome = ifelse(Amazonia == 1, "Amazônia",
+  year = ifelse(Amazonia == 1, "Amazônia",
                  ifelse(Caatinga == 1, "Caatinga",
                         ifelse(Mata_Atalntica == 1, "Mata Atlântica",   
                                ifelse(Cerrado == 1, "Cerrado",
