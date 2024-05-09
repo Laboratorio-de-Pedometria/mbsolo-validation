@@ -10,6 +10,8 @@
 
 #- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+require(chillR)
+
 # Definindo uma função calcula estatísticas de validação.
 my_summary_metrics <- function(data, lev = NULL, model = NULL) {
   
@@ -40,11 +42,13 @@ my_summary_metrics <- function(data, lev = NULL, model = NULL) {
     NSE <- round((1 - (sum((obs - pred)^2) / sum((obs - mean(obs))^2))), digits = 4)
     
     # Coeficiente de correlação de concordância de Lin (Paramos de utilizar desde o beta)
-    # CCC <- round(yardstick::ccc_vec(truth = obs, estimate = pred), digits = 4)
+     CCC <- round(yardstick::ccc_vec(truth = obs, estimate = pred), digits = 4)
+
+    RPIQ <- RPD(pred, obs, na.rm = TRUE)
     
 # Criando um vetor 'out' com os resultados
-    out <- c(ME, MAE, MSE, RMSE, NSE, r2) #, CCC
-    names(out) <- c("ME", "MAE", "MSE", "RMSE", "NSE", "Rsquared") #, "CCC"
+    out <- c(ME, MAE, MSE, RMSE, NSE, r2, CCC) #, CCC
+    names(out) <- c("ME", "MAE", "MSE", "RMSE", "NSE", "Rsquared", "CCC") #, "CCC"
     
 # Substituindo valores NaN por NA, se houver
     if (any(is.nan(out))) 
