@@ -44,7 +44,7 @@ my_summary_metrics <- function(data, lev = NULL, model = NULL) {
     # Coeficiente de correlação de concordância de Lin (Paramos de utilizar desde o beta)
      CCC <- round(yardstick::ccc_vec(truth = obs, estimate = pred), digits = 4)
 
-    RPIQ <- RPD(pred, obs, na.rm = TRUE)
+    # RPIQ <- RPIQ(pred, obs, na.rm = TRUE)
     
 # Criando um vetor 'out' com os resultados
     out <- c(ME, MAE, MSE, RMSE, NSE, r2, CCC) #, CCC

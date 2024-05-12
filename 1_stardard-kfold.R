@@ -42,19 +42,19 @@ registerDoParallel(cl) #Esta função registra o cluster criado anteriormente, p
 input_data_path <- "D:/0_Projetos/1_mbsolos-validation/data"
 
 #Define o caminho para salvar os modelos ajustados
-output_models_path <- "C:/Users/marco/OneDrive/Área de Trabalho/tuned-models_C1_v2_0_0/"
+output_models_path <- "D:/0_Projetos/1_mbsolos-validation/models/stuned-models_C1_v003/"
 
 #Define o caminho para salvar os resultados
-output_models_results_path <- "C:/Users/marco/OneDrive/Área de Trabalho/cross-validation-results_C1_v2_0_0/"
+output_models_results_path <- "D:/0_Projetos/1_mbsolos-validation/results/2024_05_11_cv_v003/"
 
 ## Importação e divisão de datasets. ---------------------------------------------------------------------------
 
 #Lê o arquivo CSV para a variável original_data.
 original_data <- read_csv(paste0(input_data_path,
-                                 "/matriz_soc_obs_C1_v2_0_0.csv"))
+                                 "/matriz_soc_obs_C1_v003.csv"));
 
 #Armazena a versão dos dados analisados.
-data_version <- "C1_v2_0_0"
+data_version <- "C1_v003"
 #Define a variável k para o número de folds na validação cruzada (ainda não definido).
 k = NA
 
@@ -63,7 +63,7 @@ k = NA
 # randomNumbers(n = 100, min = 100, max = 9999, col = 1) %>% as.vector()  # código original para gerar 100 sementes aleatórias entre 100 e 9999.
 
 #Define o vetor random_seeds com 100 sementes aleatórias.
-random_seeds <- c(6842, 7045, 1359, 4109, 7947, 9122, 2050, 6646, 8143, 8444,
+random_seeds <- c(6842, 7045,1359, 4109, 7947, 9122, 2050, 6646, 8143, 8444,
                   6402, 1721, 6955, 3744, 3144, 3681, 9588, 3807, 4464, 1034,
                   950, 8778, 163, 7249, 3181, 9938, 1564, 685, 8560, 8504, 3092,
                   7722, 6351, 2368, 5969, 6367, 3921, 8767, 9040, 1415, 428,
@@ -77,7 +77,8 @@ random_seeds <- c(6842, 7045, 1359, 4109, 7947, 9122, 2050, 6646, 8143, 8444,
 ## Covariáveis --------------------------------------------------------------------------------------------
 
 covariables <- c(
-  # Soilgrids WRB probability classes
+  
+#Soilgrids WRB probability classes
   'Ferralsols',
   'Histosols',
   'Sandysols',
@@ -85,29 +86,38 @@ covariables <- c(
   'Thinsols',
   'Wetsols',
   
-  # Soilgrids Soil Properties
+#Soilgrids Soil Properties
   'bdod',
   'cec',
   'cfvo',
-  # 'clay', #Usado na versão 1.0.0
   'nitrogen',
   'phh2o',
-  # 'sand', #Usado na versão 1.0.0
-  # 'silt', #Usado na versão 1.0.0
   'soc',
+  # 'sand', (Utilizado no STOCKCOS v000)
+  # 'clay', (Utilizado no STOCKCOS v000)
+  # 'silt', (Utilizado no STOCKCOS v000)
   
   'oxides',
   'clayminerals',
   
-  #Mapbiomas Granulometria
-  'mapbiomas_sand',
-  'mapbiomas_silt',
-  'mapbiomas_clay',
-
-  # Black Soil
+#Granulometria MapBiomas
+      #v001 (Utilizado no STOCKCOS v001)
+   # 'mapbiomas_sand_v001',
+   # 'mapbiomas_silt_v001', 
+   # 'mapbiomas_clay_v001', 
+      #v002 (Utilizado a partir STOCKCOS v002)
+  # 'mapbiomas_sand_v002', 
+  # 'mapbiomas_silt_v002', 
+  # 'mapbiomas_clay_v002',
+      #v002 (Utilizado a partir STOCKCOS v002)
+  'mapbiomas_sand_v003', 
+  'mapbiomas_silt_v003', 
+  'mapbiomas_clay_v003',
+  
+#Black Soil
   'black_soil_prob',
   
-  # Geomorphometry
+#Geomorphometry
   'convergence',
   'cti',
   'eastness',
@@ -118,11 +128,19 @@ covariables <- c(
   'spi',
   'elevation',
   
-  # Lat-Long
-  'latitude',
-  'longitude',
+#Lat-Long (Utilizado nas versões inferiores a STOCKCOS v002)
+  # 'latitude', 
+  # 'longitude',
   
-  # Koppen
+#Coordenadas Obliquas (Utilizado a partir STOCKCOS v002)
+  'OGC_0', 
+  'OGC_0_53',
+  'OGC_1_03', 
+  'OGC_1_57', 
+  'OGC_2_10', 
+  'OGC_2_60',
+  
+#Koppen
   'lv1_Humid_subtropical_zone',
   'lv1_Tropical',
   'lv2_monsoon',
@@ -134,49 +152,15 @@ covariables <- c(
   'lv3_with_hot_summer',
   'lv3_with_temperate_summer',
   
-  # Indices
-  'evi_mean',
-  'savi_mean',
-  'ndvi_mean',
-  
-  # # MapBiomas - Col.7.1
-  # 'formacaoCampestre',
-  # 'formacaoFlorestal',
-  # 'formacaoSavanica',
-  # 'mosaicoAgriculturaPastagem',
-  # 'outrasFormacoesNaoFlorestais',
-  # 'pastagem',
-  # 'lavouras',
-  # 'antropico',
-  # 'natural',
-  # 'Area_Estavel',
-  
-  # MapBiomas - Col. 8.0
-  # 'campoAlagado-areaPantanosa', #Não rodou na matriz C1-v1_0_0
-  'formacaoCampestre',
-  'formacaoFlorestal',
-  'formacaoSavanica',
-  'lavouras',
-  'mosaicoDeUsos',
-  'outrasFormacoesFlorestais',
-  'pastagem',
-  'restingas',
-  'silvicultura',
-  'antropico',
-  'natural',
-
-  'Area_Estavel',
-  
-  # Biomas 
+#Biomas 
   'Amazonia',
   'Caatinga',
   'Cerrado',
-  # 'Mata_Atalntica', #Col. 7.1
-  'Mata_Atlantica', #Col. 8.0
+  'Mata_Atlantica',
   'Pampa',
   'Pantanal',
   
-  # Fitofisionomia
+#Fitofisionomia
   'Floresta_Ombrofila_Aberta',
   'Floresta_Estacional_Decidual',
   'Floresta_Ombrofila_Densa',
@@ -190,12 +174,37 @@ covariables <- c(
   'Floresta_Estacional_Sempre_Verde',
   'Estepe',
   
-  # Quarta Comunicação Nacional
-  "cagb",
-  "cbgb",
-  "cdw",
-  "clitter",
-  "ctotal"
+  'Area_Estavel',
+
+#Quarta Comunicação Nacional
+  'cagb',
+  'cbgb',
+  'cdw',
+  'clitter',
+  'ctotal',
+
+### Dinâmicas 
+
+#Indices
+  'evi_mean',
+  'savi_mean',
+  'ndvi_mean',
+  
+#MapBiomas - Col.8
+
+  # 'campoAlagado-areaPantanosa', 
+  'formacaoCampestre',
+  'formacaoFlorestal',
+  'formacaoSavanica',
+  'lavouras',
+  'mosaicoDeUsos',
+  'outrasFormacoesFlorestais',
+  'pastagem',
+  'restingas',
+  'silvicultura',
+  'antropico',
+  'natural'  
+ 
 )
 
 ## Definição das métricas usadas (script "statistical_functions.R) -----------------------------------------------------
@@ -207,6 +216,8 @@ source("D:/0_Projetos/1_mbsolos-validation/code/0_statistical_functions.R") # Fo
 # Inicialização de listas para armazenar resultados de validação cruzada
 rf_kFold_cross_validation <- list() #Lista vazia para armazenar resultados
 rf_kFold_best_models <- list() #Lista vazia para armazenar os melhores modelos
+all_predictions <- list() # Lista vazia para armazenar as predições
+fold_samples <- list() # Armazena os dataset_id usados em cada fold
 
 for (i in seq(along.with = random_seeds)) { #Este loop itera sobre todas as sementes aleatórias armazenadas em random_seeds
   
@@ -217,9 +228,11 @@ for (i in seq(along.with = random_seeds)) { #Este loop itera sobre todas as seme
   set.seed(random_seeds[i]) 
   
   ## Prepara um objeto de controle kfold
-  cv_control_object <- trainControl(method = "cv", number = 10, #Define o método (Validação cruzada) e npumero de folds (10)
+  cv_control_object <- trainControl(method = "cv", number = 10, #Define o método (Validação cruzada) e numero de folds (10)
                                     summaryFunction = my_summary_metrics, #É especificada como a função de resumo para  para calcular as métricas estatísticas
-                                    returnResamp = 'all') #Para retornar todas as amostras de treinamento e validação
+                                    returnResamp = 'all')
+                                    # savePredictions = 'final',
+                                    # indexOut = createFolds(original_data$estoque, k = 10, list = TRUE, returnTrain = FALSE)) #Para retornar todas as amostras de treinamento e validação
   
   ## Treinando o modelo
   tuned_RF_kfold_cv <- train( #Treina um modelo Random Forest
@@ -238,8 +251,37 @@ for (i in seq(along.with = random_seeds)) { #Este loop itera sobre todas as seme
                           splitrule = "variance") #Método para dividir os nós da árvore
   )
 
+  # Registro dos índices de cada fold
+  for (j in seq_along(cv_control_object$indexOut)) {
+    ids_in_fold <- original_data$dataset_id[cv_control_object$indexOut[[j]]]
+    fold_info <- data.frame(Model = paste("Model", i),
+                            Fold = j,
+                            Dataset_ID = ids_in_fold)
+    fold_samples[[paste("Model", i, "Fold", j)]] <- fold_info
+  }
+
+# Combina todos os dados de fold em um único DataFrame
+  all_fold_data <- do.call(rbind, fold_samples)
+  
+  ## Armazenamento da predição para cada ponto de observação
+  predictions <- predict(tuned_RF_kfold_cv, newdata = original_data)
+  observed_vs_predicted <- data.frame(
+    dataset_id = original_data$dataset_id,
+    Latitude = original_data$latitude,
+    Longitude = original_data$longitude,
+    Observed = original_data$estoque,
+    Predicted = predictions,
+    model_index = i 
+  )
+  
+  if (is.null(all_predictions)) {
+    all_predictions <- observed_vs_predicted
+  } else {
+    all_predictions <- rbind(all_predictions, observed_vs_predicted)
+  }
+  
 # Remove o objeto de controle após o treinamento do modelo para liberar memória
-  remove(cv_control_object)
+  # remove(cv_control_object)
   
 ## Obtenção de métricas de treinamento -------
   
@@ -318,6 +360,16 @@ if (dir.exists(output_models_results_path)) { #Verifica se já existe
                     "rf-kFold-results.xlsx"), 
              col_names = TRUE) 
   
+  write_xlsx(all_predictions,
+             paste0(output_models_results_path, 
+                    "all_predictions.xlsx"), 
+             col_names = TRUE)
+  
+  # write_xlsx(all_fold_data, 
+  #           paste0(output_models_results_path, 
+  #                          "fold_samples.xlsx"),
+  #            col_names = TRUE)
+  
 } else { #Se o diretório não existir
   
   dir.create(output_models_results_path) #Cria o diretório especificado
@@ -331,6 +383,16 @@ if (dir.exists(output_models_results_path)) { #Verifica se já existe
              paste0(output_models_results_path,
                     "rf-kFold-results.xlsx"),
              col_names = TRUE)  
+  
+  write_xlsx(all_predictions,
+             paste0(output_models_results_path,
+                    "all_predictions.xlsx"),
+             col_names = TRUE)  
+  
+  # write_xlsx(all_fold_data, 
+  #            paste0(output_models_results_path, 
+  #                   "fold_samples.xlsx"),
+  #            col_names = TRUE)
   
 }
 
