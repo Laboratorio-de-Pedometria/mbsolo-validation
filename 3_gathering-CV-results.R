@@ -24,10 +24,10 @@ library(magrittr)    # Para operações pipe (%>%)
 
 # Data --------------------------------------------------------------------
 # Definindo a versão dos dados em uso
-data_version <- "C1_v2_0_0"
+data_version <- "v0-1-6"
 
 # Criando o caminho para os resultados de validação cruzada
-cv_results_path <- "/results/2024_03_18_cv_C1_v2_0_0/"
+cv_results_path <- paste0("./results/", data_version, "/")
 
 # Listando arquivos .xlsx no caminho especificado
 list.files(path = cv_results_path, pattern = ".xlsx")
@@ -37,7 +37,7 @@ list.files(path = cv_results_path, pattern = ".xlsx")
 cv_results <- list(
   # Resultados da validação cruzada k-Fold comum
   rf__kFold_results = read_excel(
-    paste0(cv_results_path, "D:/0_Projetos/1_mbsolos-validation/results/2024_03_18_cv_C1_v2_0_0/rf-kFold-results.xlsx")) %>% 
+    paste0(cv_results_path, data_version, "_rf-kFold-results.xlsx")) %>% 
     mutate(cross_validation = "Standard k-Fold CV", model_for = "random forest", n_clusters = 0),
   
  #  # Resultados da validação cruzada Spatial com diferentes números de clusters
@@ -59,20 +59,19 @@ cv_results <- list(
 cv_results <- bind_rows(cv_results)
 
 # Escrevendo os resultados em um arquivo Excel
-write_xlsx(cv_results, "results/cv_C1_v001_results.xlsx", col_names = TRUE)
-
+write_xlsx(cv_results, paste0(cv_results_path, data_version, "_cv_clusters_results.xlsx"), col_names = TRUE)
+  
 # Biome-wise standard cross-validation statistics -------------------------
 
 # Carregando dados originais e definindo novamente a versão dos dados
 input_data_path <- "data/"
-original_data <- read_csv(paste0(input_data_path, "/matriz_soc_obs_C1_v2_0_0.csv"))
-data_version <- "C1_v2_0_0"
+original_data <- read_csv(paste0(input_data_path, "/matriz-", data_version ,".csv"))
 
 # Classificando os dados por bioma
 original_data <- original_data %>% mutate(
   biome = ifelse(Amazonia == 1, "Amazônia",
                  ifelse(Caatinga == 1, "Caatinga",
-                        ifelse(Mata_Atalntica == 1, "Mata Atlântica",   
+                        ifelse(Mata_Atlantica == 1, "Mata Atlântica",   
                                ifelse(Cerrado == 1, "Cerrado",
                                       ifelse(Pampa == 1, "Pampa",
                                              ifelse(Pantanal == 1, "Pantanal", "NA")))))),
@@ -104,9 +103,11 @@ original_data <- original_data %>% mutate(
     MAE <- round(mean(abs(pred - obs), na.rm = TRUE), digits = 4)  # Mean Absolute Error
     RMSE <- round(sqrt(mean((pred - obs)^2, na.rm = TRUE)), digits = 4)  # Root Mean Square Error
     r2 <- round((cor(pred, obs, method = 'spearman', use = 'pairwise.complete.obs')^2), digits = 4)  # Pearson's correlation squared
-    NSE <- round((1 - sum((obs - pred)^2) / sum((obs - mean(obs))^2)), digits = 4)  # Nash–Sutcliffe model efficiency coefficient
-    out <- c(ME, MAE, MSE, RMSE, NSE, r2)
-    names(out) <- c("ME", "MAE", "MSE", "RMSE", "NSE", "Rsquared")
+    NSE <- round((1 - sum((obs - pred)^2) / sum((obs - mean(obs))^2)), digits = 4)  # Nash–Sutcliffe model efficiency coefficien
+    VAR <- round(var(pred - obs, na.rm = TRUE), digits = 4)
+    SD <- round(sqrt(VAR), digits = 4)
+    out <- c(ME, MAE, MSE, RMSE, NSE, r2, VAR, SD)
+    names(out) <- c("ME", "MAE", "MSE", "RMSE", "NSE", "Rsquared", "VAR", "SD")
     if (any(is.nan(out))) 
       out[is.nan(out)] <- NA
     out
@@ -114,7 +115,7 @@ original_data <- original_data %>% mutate(
 # Computing statistical metrics for samples from each biome separa --------
 # Computing same goodness-of-fit metrics from models tuning
 
-models_path <- "models/tuned-models_C1_v2_0_0/" # Define o caminho para os modelos ajustados
+models_path <- paste0("./models/", data_version, "/") # Define o caminho para os modelos ajustados
 
 model_names <- list.files(path = models_path, pattern = "RF_cv_model") # Obtém os nomes dos arquivos de modelo
 
@@ -196,6 +197,5 @@ remove(amazonia_cv_results, caatinga_cv_results,
 
 # Escreve os resultados de validação cruzada em arquivos Excel separados por bioma
 write_xlsx(biome_cv_results,
-           path = paste0("results/2024_03_18_cv_C1_v2_0_0/",
-                         "each_biome-cross_validation-results_C1_v2_0_0.xlsx"),
+           path = paste0(cv_results_path,"/", data_version, "_each_biome.xlsx"),
            col_names = TRUE)

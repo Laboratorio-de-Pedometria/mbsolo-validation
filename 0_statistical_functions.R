@@ -41,10 +41,18 @@ my_summary_metrics <- function(data, lev = NULL, model = NULL) {
     # NSE <- round(1 - sum((obs - pred)^2) / sum((obs - mean(obs))^2), digits = 4)
     NSE <- round((1 - (sum((obs - pred)^2) / sum((obs - mean(obs))^2))), digits = 4)
     
-    # Coeficiente de correlação de concordância de Lin (Paramos de utilizar desde o beta)
-     CCC <- round(yardstick::ccc_vec(truth = obs, estimate = pred), digits = 4)
+        # Coeficiente de correlação de concordância de Lin (Paramos de utilizar desde o beta)
+    CCC <- round(yardstick::ccc_vec(truth = obs, estimate = pred), digits = 4)
 
-    # RPIQ <- RPIQ(pred, obs, na.rm = TRUE)
+    # Variância
+    VAR <- round(var(pred - obs, na.rm = TRUE), digits = 4)
+
+    # Desvio padrão
+    SD <- round(sqrt(VAR), digits = 4)
+    
+# Criando um vetor 'out' com os resultados
+    out <- c(ME, MAE, MSE, RMSE, NSE, r2, CCC, VAR, SD) #, CCC
+    names(out) <- c("ME", "MAE", "MSE", "RMSE", "NSE", "Rsquared", "CCC", "VAR", "SD") #, "CCC"
     
 # Criando um vetor 'out' com os resultados
     out <- c(ME, MAE, MSE, RMSE, NSE, r2, CCC) #, CCC

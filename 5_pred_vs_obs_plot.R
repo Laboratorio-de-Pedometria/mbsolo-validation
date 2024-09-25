@@ -5,7 +5,7 @@ library(ggplot2)
 library(gridExtra) # para adicionar tabelas ao gráfico
 
 # Carregar os dados
-dados <- read_excel("D:/0_Projetos/1_mbsolos-validation/results/2024_05_11_cv_v003/all_predictions.xlsx")
+dados <- read_excel("D:/0_Projetos/1_mbsolos-validation/results/2024_06_04_cv_C1_v003/all_predictions.xlsx")
 
 # Calcular a média das previsões para cada dataset_id em g/m²
 dados_media_gm2 <- dados %>%
@@ -59,5 +59,5 @@ plot_gm2 <- create_plot(dados_media_gm2, "mean_observed_gm2", "mean_predicted_gm
 plot_tha <- create_plot(dados_media_tha, "mean_observed_tha", "mean_predicted_tha", "(t/ha)")
 
 # Salvar gráficos
-ggsave("D:/0_Projetos/1_mbsolos-validation/results/2024_05_11_cv_v003/scatter_plot_with_metrics_gm2.png", plot_gm2, width = 12, height = 8, dpi = 300)
-ggsave("D:/0_Projetos/1_mbsolos-validation/results/2024_05_11_cv_v003/scatter_plot_with_metrics_tha.png", plot_tha, width = 12, height = 8, dpi = 300)
+ggsave("D:/0_Projetos/1_mbsolos-validation/results/2024_06_04_cv_C1_v003/scatter_plot_with_metrics_gm2.png", plot_gm2, width = 12, height = 8, dpi = 300)
+ggsave("D:/0_Projetos/1_mbsolos-validation/results/2024_06_04_cv_C1_v003/scatter_plot_with_metrics_tha.png", plot_tha, width = 12, height = 8, dpi = 300)
