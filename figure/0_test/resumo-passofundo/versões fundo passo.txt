@@ -1,0 +1,38 @@
+V 0 
+
+2024-01-X (Versão 000)
+Atualização da covariável de LULC col.8;
+Reprocessamento das covariáveis usadas na coleção beta.
+2024-02-26 (Adição)
+Atualização da covariável de fitofisionomia IBGE para a versão 2023.
+
+V 1 
+
+2024-04-30 (Versão 002)
+Atualização das covariáveis de mapbiomas_granulometria_v002 (versão do granulometria com coordenadas obliquas).
+Adição das covariáveis de coordenadas obliquas.
+
+V 2 
+2024-06-24 (Versão 004)
+Adição do Mapa de StockCOS 1984 "mapbiomas_v001_1984"
+Utilização de 5202 amostras a partir de 1985 para treinar o modelo RF;
+Remoção das coordenadas
+
+V 3 
+2024-07-01 (Versão 005)
+Mesmas covariáveis da versão v004;
+Utilização de 5202 amostras a partir de 1985 para treinar o modelo RF;
+Mudança na configuração do modelo RF:
+var rf_params = {
+ntree:400,
+mtry:10,
+nodesize:5,
+sampsize:0.632,
+maxNodes: 20,
+seed:1984,
+
+V 4 
+2024-07-04 (Versão 0051)
+Mesmas covariáveis da versão v005;
+Mesma configuração do modelo RF da versão 005;
+Utilização de 9634 amostras para treinar o modelo.
